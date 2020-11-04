@@ -25,7 +25,7 @@ class Makao():
             print(player.getname(), player.show_hand())
         print(self.table)
 
-#zwykła wojna dla 2 graczy (wersja automatyczna)
+#zwykła wojna dla 2 graczy na 1 talię (wersja automatyczna)
 class Wojna():
     suit = ('hearts', 'spades', 'diamond', 'clubs')
     ranks = ('two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'jack', 'queen', 'king', 'ace')

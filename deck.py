@@ -91,21 +91,3 @@ class Player():
             self.hand.append(self.table[i])
         for i in range(len(self.table)):
             self.table.pop()
-
-
-"""     przykładowa implementacja
-table = []
-deck_A = Deck()
-hand_1 = Hand(deck_A, table)
-hand_2 = Hand(deck_A, table)
-
-
-hand_1.draw_card()
-hand_1.draw_card()
-hand_1.card_on_table(0)
-for i in range(5):
-    hand_2.draw_card()
-
-hand_2.card_to_deck(4)
-
-print(hand_1.__sizeof__() + hand_2.__sizeof__() + len(table) + deck_A.__sizeof__())"""
