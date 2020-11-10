@@ -11,10 +11,8 @@ class Deck():
         self.table = table
         random.shuffle(self.deck)
 
-    def __str__(self):
-        return str(self.deck)
 
-    def __sizeof__(self):
+    def size(self):
         return len(self.deck)
 
     def draw_card(self):
@@ -47,9 +45,6 @@ class Player():
         self.hand = []
         self.name = name
         self.points = 0
-
-    def __str__(self):
-        return str(self.hand)
 
     def getsize(self):
         return len(self.hand)
@@ -90,3 +85,4 @@ class Player():
         for i in range(len(self.table)):
             self.hand.append(self.table[i])
         for i in range(len(self.table)):
+            self.table.pop()

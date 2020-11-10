@@ -71,7 +71,7 @@ class Wojna():
         return self.number_of_players
 
     def start_game(self):
-        while self.deck.__sizeof__()+1 > len(self.players):
+        while self.deck.size()+1 > len(self.players):
             for player in self.players:
                 player.draw_card()
 
