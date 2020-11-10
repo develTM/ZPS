@@ -25,7 +25,18 @@ class Makao():
             print(player.getname(), player.show_hand())
         print(self.table)
 
-#zwykła wojna dla 2 graczy na 1 talię (wersja automatyczna)
+
+
+
+
+
+
+
+
+
+
+        
+"""
 class Wojna():
     suit = ('hearts', 'spades', 'diamond', 'clubs')
     ranks = ('two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'jack', 'queen', 'king', 'ace')
@@ -39,16 +50,25 @@ class Wojna():
         self.deck = Deck(self.table)
         self.rounds_played = 0
 
-    def boldness(self):
+    def check_boldness(self):
         for player in self.players:
-            #print(player.getsize())
             if player.getsize() == 0:
+                print(player.getname(), player.getscore(), 'eliminated')
+                self.players.remove(player)
+                self.number_of_players -= 1
                 return True
         return False
 
     def add_player(self, name):
         self.players.append(Player(self.deck, self.table, name))
         self.number_of_players += 1
+
+    def remove_player(self, player):
+        self.players.remove(player)
+        self.number_of_players -= 1
+
+    def getnumberofplayers(self):
+        return self.number_of_players
 
     def start_game(self):
         while self.deck.__sizeof__()+1 > len(self.players):
@@ -60,29 +80,21 @@ class Wojna():
         for player in self.players:
             player.shuffle()
             player.card_on_table(0)
-        value_p1 = (Wojna.rank_values[Wojna.ranks.index(self.table[-2][0])], Wojna.suit_values[Wojna.suit.index(self.table[-2][1])])
-        value_p2 = (Wojna.rank_values[Wojna.ranks.index(self.table[-1][0])], Wojna.suit_values[Wojna.suit.index(self.table[-1][1])])
-        #print(value_p1, value_p2)
-        if value_p1[0] == value_p2[0]:
-            if value_p1[1] > value_p2[1]:
-                winner = 0
-            else:
-                winner = 1
-        elif value_p1[0] > value_p2[0]:
-            winner = 0
-        else:
-            winner = 1
-        self.players[winner].add_points(1)
-        self.players[winner].take_table()
+        max_value = [0, 0]
+        iterator = -len(self.players)
+        winner = self.players[0]
+        for player in self.players:
+            iterator += 1
+            current_value = Wojna.rank_values[Wojna.ranks.index(self.table[iterator][0])], Wojna.suit_values[Wojna.suit.index(self.table[iterator][1])]
+            if max_value[0] < current_value[0] or (max_value == current_value and max_value[1] < current_value[1]):
+                max_value = current_value
+                winner = player
+        winner.add_points(1)
+        winner.take_table()
 
     def getstats(self):
         for player in self.players:
-            print(player.getname(), player.getscore())
-        if self.players[0].getscore() > self.players[1].getscore():
-            print(self.players[0].getname(), 'wins')
-        else:
-            print(self.players[1].getname(), 'wins')
-
+            print(player.getname(), player.getscore(), 'wins')
 
     def round_number(self):
         return self.rounds_played
@@ -91,9 +103,11 @@ class Wojna():
 wojna = Wojna()
 wojna.add_player('emoboi')
 wojna.add_player('mareczek')
+wojna.add_player('koksuPL')
 wojna.start_game()
-while not wojna.boldness():
+while wojna.number_of_players > 1:
+    wojna.check_boldness()
     if wojna.rounds_played > 10000:
         break
     wojna.round()
-wojna.getstats()
+wojna.getstats()"""
