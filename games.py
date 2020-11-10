@@ -25,6 +25,18 @@ class Makao():
             print(player.getname(), player.show_hand())
         print(self.table)
 
+
+
+
+
+
+
+
+
+
+
+        
+"""
 class Wojna():
     suit = ('hearts', 'spades', 'diamond', 'clubs')
     ranks = ('two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'jack', 'queen', 'king', 'ace')
@@ -98,4 +110,4 @@ while wojna.number_of_players > 1:
     if wojna.rounds_played > 10000:
         break
     wojna.round()
-wojna.getstats()
+wojna.getstats()"""
