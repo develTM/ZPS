@@ -90,8 +90,3 @@ class Player():
         for i in range(len(self.table)):
             self.hand.append(self.table[i])
         for i in range(len(self.table)):
-<<<<<<< HEAD
-            self.table.pop()
-=======
-            self.table.pop()
->>>>>>> 96936437f81b337ff720803beaa050cf35d6c03d
