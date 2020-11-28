@@ -1,30 +1,95 @@
-
 from tools import Clock
-import os
-import cv2
 import numpy as np
-import pandas as pd
-from tqdm import tqdm
-from random import shuffle
-import statistics
 import matplotlib.pyplot as plt
-from matplotlib.pyplot import imread, imshow, subplots, show
-
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
-
 clock = Clock()
-clock.tick()
-clock.tick()
-clock.tick()
-clock.tick('dupa')
 
-clock.tick()
+data = np.load('D:/ML/card cv/data.npy', allow_pickle=True)
+
+train = data[:37000]
+test = data[37000:]
+
+train_X = []
+train_y = []
+for x in train:
+    train_X.append(x[0])
+    train_y.append(x[1])
+
+test_X = []
+test_y = []
+for x in test:
+    test_X.append(x[0])
+    test_y.append(x[1])
+
+train_X = np.array(train_X)
+train_y = np.array(train_y)
+test_X = np.array(test_X)
+test_y = np.array(test_y)
+
+
+
+tf.keras.backend.clear_session()
+np.random.seed(42)
+tf.random.set_seed(42)
+
+epochs=250
+batch_size=32
+
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Conv2D(64, (3,3), activation='relu', input_shape=(train_X.shape[1], train_X.shape[2], train_X.shape[3])),
+    tf.keras.layers.MaxPooling2D(2, 2),
+    tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2,2),
+    tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2,2),
+    tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2,2),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dropout(0.5),
+    tf.keras.layers.Dense(512, activation='relu'),
+    tf.keras.layers.Dense(52, activation='softmax')])
+
+model.summary()
+
+cp = tf.keras.callbacks.ModelCheckpoint(filepath="250epochs_conv.h5", save_best_only=True, verbose=0)
+
+model.compile(loss = 'sparse_categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+
+history = model.fit(train_X, train_y, epochs=epochs, batch_size=batch_size, validation_data=(test_X, test_y), callbacks=[cp]).history
+
+
+acc = history['accuracy']
+val_acc = history['val_accuracy']
+loss = history['loss']
+val_loss = history['val_loss']
+epochs = range(len(acc))
+
+plt.figure(figsize = (12,8))
+plt.plot(epochs, loss, 'r', label='Training loss')
+plt.plot(epochs, val_loss, 'b', label='Validation loss')
+plt.title('Training and validation loss')
+plt.legend(loc=0)
+plt.figure()
+plt.show()
+
+plt.figure(figsize = (12,8))
+plt.plot(epochs, acc, 'r', label='Training accuracy')
+plt.plot(epochs, val_acc, 'b', label='Validation accuracy')
+plt.title('Training and validation accuracy')
+plt.legend(loc=0)
+plt.figure()
+plt.show()
+
+
+
+
+
+
+
 # read single image and plot 16 transformations with matplotlib.pyplot
-"""
-def plot_16(device_name):
-    #with tf.device(device_name):
+def plot_16():
     image = plt.imread('images/3 karo.jpg')
     images = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
         #imshow(images[0])
@@ -41,46 +106,15 @@ def plot_16(device_name):
         plt.imshow(image_iterator.next()[0].astype('int'))
         print(i)
     plt.show()
-
-#plot_16('/CPU:0')
-plot_16('/GPU:0')
-"""
+#plot_16()
 
 
 
 
-"""
-def gen_data(device_name):
-    with tf.device(device_name):
-        #data = []
 
-        for i, img in tqdm(enumerate(os.listdir('cards/'))):
-            #label = i
 
-            img = cv2.imread('cards/' + img, cv2.IMREAD_GRAYSCALE)
-            img = cv2.resize(img, (180, 180))
-            imgs = img.reshape((1, img.shape[0], img.shape[1], 1))
-            data_generator = ImageDataGenerator(rotation_range=90, brightness_range=(0.5, 1.5), shear_range=15.0,
-                                                zoom_range=[.3, .8])
-            data_generator.fit(imgs)
-            image_iterator = data_generator.flow(imgs)
 
-            for x in range(100):
-                img_transformed = image_iterator.next()[0].astype('int') / 255
-                np.save('P:\card cv\data_' + str(x) + '.npy', img_transformed)
-                #data.append([img_transformed, label])
 
-time_start_time = time.time()
-gen_data('/GPU:0')
-first_time = time.time() - time_start_time
-print('GPU:',first_time * 1000)
-
-time_start_time = time.time()
-gen_data('/CPU:0')
-second_time = time.time() - time_start_time
-print('CPU:',second_time* 1000)
-print('GPU gain: ', format(second_time/first_time, '.2%')-1)
-"""
 
 
 
