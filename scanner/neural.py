@@ -30,21 +30,19 @@ tf.keras.backend.clear_session()
 np.random.seed(7)
 tf.random.set_seed(7)
 
-epochs=500
-batch_size=16
+epochs=400
+batch_size=32
 
 model = tf.keras.models.Sequential([
-        tf.keras.layers.Dense(64, activation='relu', input_shape=(train_X.shape[1], train_X.shape[2], train_X.shape[3])),
-        # tf.keras.layers.MaxPooling2D(2, 2),
-        # tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
-        # tf.keras.layers.MaxPooling2D(2,2),
-        # tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
-
-        tf.keras.layers.Conv2D(16, (3,3), activation='relu'),
-        tf.keras.layers.MaxPooling2D(2,2),
+        tf.keras.layers.Conv2D(filters=32,kernel_size=(3, 3), activation='relu', input_shape=(train_X.shape[1], train_X.shape[2], train_X.shape[3])),
+        tf.keras.layers.MaxPooling2D(pool_size=(9, 9), strides=5),
+        tf.keras.layers.Conv2D(filters=4, kernel_size=(3,3), activation='relu'),
+        tf.keras.layers.MaxPooling2D(pool_size=(2,2)),
+        tf.keras.layers.Conv2D(filters=4, kernel_size=(3,3), activation='relu'),
+        tf.keras.layers.MaxPooling2D(pool_size=(2,2)),
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dropout(0.5),
-        tf.keras.layers.Dense(16, activation='relu'),
+        #tf.keras.layers.Dropout(0.5),
+        tf.keras.layers.Dense(4, activation='relu'),
         tf.keras.layers.Dense(4, activation='softmax')])
 
 model.summary()
@@ -54,8 +52,8 @@ model.compile(loss = 'sparse_categorical_crossentropy', optimizer='rmsprop', met
 with tf.device('/GPU:0'):
     history = model.fit(train_X, train_Y, epochs=epochs, batch_size=batch_size, validation_data=(test_X, test_Y),callbacks=[cp]).history
 
-if os.path.isfile('models\color_demo.h5')
-    tf.keras.models.save_model('models\color_demo.h5')
+#if os.path.isfile('models\color_demo.h5') is False:
+tf.keras.models.save_model(model,'E:\ZPS\scanner\models\color_demo.h5')
 
 
 acc = history['accuracy']
@@ -63,7 +61,7 @@ val_acc = history['val_accuracy']
 loss = history['loss']
 val_loss = history['val_loss']
 epochs = range(len(acc))
-
+"""
 plt.figure(figsize = (12,8))
 plt.plot(epochs, loss, 'r', label='Training loss')
 plt.plot(epochs, val_loss, 'b', label='Validation loss')
@@ -71,33 +69,11 @@ plt.title('Training and validation loss')
 plt.legend(loc=0)
 plt.figure()
 plt.show()
-
-plt.figure(figsize = (12,8))
+"""
+#plt.figure(figsize = (12,8))
 plt.plot(epochs, acc, 'r', label='Training accuracy')
 plt.plot(epochs, val_acc, 'b', label='Validation accuracy')
-plt.title('Training and validation accuracy')
+plt.title('ACCURANCY')
 plt.legend(loc=0)
-plt.figure()
+#plt.figure()
 plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
