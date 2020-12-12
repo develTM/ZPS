@@ -1,5 +1,4 @@
-from tools import Clock
-import os.path
+from configuration import color_dataset_path, color_model_path
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
@@ -7,7 +6,7 @@ import tensorflow as tf
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
-data = np.load('P:\card cv\colors99.npy', allow_pickle=True)
+data = np.load(color_dataset_path, allow_pickle=True)
 train = data[:200]
 test = data[200:]
 train_X = []
@@ -30,30 +29,30 @@ tf.keras.backend.clear_session()
 np.random.seed(7)
 tf.random.set_seed(7)
 
-epochs=400
-batch_size=32
+epochs=40
+batch_size=1
 
 model = tf.keras.models.Sequential([
         tf.keras.layers.Conv2D(filters=32,kernel_size=(3, 3), activation='relu', input_shape=(train_X.shape[1], train_X.shape[2], train_X.shape[3])),
-        tf.keras.layers.MaxPooling2D(pool_size=(9, 9), strides=5),
-        tf.keras.layers.Conv2D(filters=4, kernel_size=(3,3), activation='relu'),
+        tf.keras.layers.MaxPooling2D(pool_size=(3, 3), strides=2),
+        tf.keras.layers.Conv2D(filters=8, kernel_size=(3,3), activation='relu'),
         tf.keras.layers.MaxPooling2D(pool_size=(2,2)),
         tf.keras.layers.Conv2D(filters=4, kernel_size=(3,3), activation='relu'),
         tf.keras.layers.MaxPooling2D(pool_size=(2,2)),
         tf.keras.layers.Flatten(),
         #tf.keras.layers.Dropout(0.5),
         tf.keras.layers.Dense(4, activation='relu'),
-        tf.keras.layers.Dense(4, activation='softmax')])
+        tf.keras.layers.Dense(4, activation='softmax')
+])
 
 model.summary()
-cp = tf.keras.callbacks.ModelCheckpoint(filepath="250epochs_conv.h5", save_best_only=True, verbose=0)
+cp = tf.keras.callbacks.ModelCheckpoint(filepath="models/checkpoint.h5", save_best_only=True, verbose=0)
 model.compile(loss = 'sparse_categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
 
 with tf.device('/GPU:0'):
     history = model.fit(train_X, train_Y, epochs=epochs, batch_size=batch_size, validation_data=(test_X, test_Y),callbacks=[cp]).history
 
-#if os.path.isfile('models\color_demo.h5') is False:
-tf.keras.models.save_model(model,'E:\ZPS\scanner\models\color_demo.h5')
+model.save(color_model_path)
 
 
 acc = history['accuracy']
