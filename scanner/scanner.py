@@ -1,4 +1,4 @@
-from configuration import image_width, image_height
+from configuration import image_width, image_height, color_scale
 import numpy as np
 import cv2
 import tensorflow as tf
@@ -8,16 +8,20 @@ def prepare(path_to_file):
     img = cv2.imread(path_to_file, cv2.IMREAD_GRAYSCALE)
     img = cv2.resize(img, (image_width, image_height))
     img = img.reshape((1, img.shape[0], img.shape[1], 1))
-
-    img = img.astype('int')
+    img = img.astype('int')/color_scale
     data = np.array(img)
-
     return data
 
 
 color_model = tf.keras.models.load_model('models\color_demo.h5')
 color_model.summary()
 # clubs = prepare('E:\ZPS\scanner\cards\colors\clubs.png')
+# 0 clubs.png
+# 1 diamonds.png
+# 2 hearts.png
+# 3 spades.png
+
+
 
 prediction = color_model.predict(prepare('E:\ZPS\scanner\cards\colors\clubs.png'))
 print(prediction)

@@ -1,4 +1,4 @@
-from configuration import color_dataset_path, image_height, image_width
+from configuration import color_dataset_path, image_height, image_width, color_scale
 import time
 import os
 import cv2
@@ -14,6 +14,7 @@ def gen_data(device_name = '/CPU:0'):
         data = []
 
         for label, img in tqdm(enumerate(os.listdir('cards/colors/'))):
+            print(label, img)
             img = cv2.imread('cards/colors/' + img, cv2.IMREAD_GRAYSCALE)
             img = cv2.resize(img, (image_width, image_height))
             imgs = img.reshape((1, img.shape[0], img.shape[1], 1))
@@ -21,8 +22,8 @@ def gen_data(device_name = '/CPU:0'):
             data_generator.fit(imgs)
             image_iterator = data_generator.flow(imgs)
 
-            for x in range(100):
-                img_transformed = image_iterator.next()[0].astype('int')
+            for x in range(1000):
+                img_transformed = image_iterator.next()[0].astype('int')/color_scale
                 #np.save('P:\card cv\data_' + str(x) + '.npy', [img_transformed, label])
                 data.append([img_transformed, label])
         shuffle(data)
