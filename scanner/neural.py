@@ -1,14 +1,19 @@
-from configuration import color_dataset_path, color_model_path
+from configuration import color_dataset_path, color_model_path, image_width, image_height, color_scale
+
+import os
+import cv2
+
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
+
 
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 data = np.load(color_dataset_path, allow_pickle=True)
-train = data[:2000]
-test = data[2000:]
+train = data[:20000]
+test = data[20000:]
 train_X = []
 train_y = []
 for x in train:
@@ -29,21 +34,19 @@ tf.keras.backend.clear_session()
 np.random.seed(7)
 tf.random.set_seed(7)
 
-epochs=40
+epochs=10
 batch_size=32
 
 model = tf.keras.models.Sequential([
         tf.keras.layers.Conv2D(filters=8,kernel_size=(2, 2), activation='relu', input_shape=(train_X.shape[1], train_X.shape[2], train_X.shape[3])),
         tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=1),
-        tf.keras.layers.Conv2D(filters=8, kernel_size=(3,1), activation='relu'),
+        tf.keras.layers.Conv2D(filters=8, kernel_size=(5,1), activation='relu'),
         tf.keras.layers.MaxPooling2D(pool_size=(2,2)),
-        #tf.keras.layers.Conv2D(filters=8, kernel_size=(2,2), activation='relu'),
-        #tf.keras.layers.MaxPooling2D(pool_size=(2,2)),
-        tf.keras.layers.Conv2D(filters=8, kernel_size=(1,3), activation='relu'),
+        tf.keras.layers.Conv2D(filters=8, kernel_size=(1,5), activation='relu'),
+        tf.keras.layers.MaxPooling2D(pool_size=(2,2)),
+        tf.keras.layers.Conv2D(filters=8, kernel_size=(4,4), activation='softmax'),
         tf.keras.layers.MaxPooling2D(pool_size=(2,2)),
         tf.keras.layers.Flatten(),
-        #tf.keras.layers.Dropout(0.5),
-        #tf.keras.layers.Dense(4, activation='relu'),
         tf.keras.layers.Dense(4, activation='softmax')
 ])
 
@@ -57,24 +60,16 @@ with tf.device('/GPU:0'):
 model.save(color_model_path)
 
 
+
+
+
 acc = history['accuracy']
 val_acc = history['val_accuracy']
 loss = history['loss']
 val_loss = history['val_loss']
 epochs = range(len(acc))
-"""
-plt.figure(figsize = (12,8))
-plt.plot(epochs, loss, 'r', label='Training loss')
-plt.plot(epochs, val_loss, 'b', label='Validation loss')
-plt.title('Training and validation loss')
-plt.legend(loc=0)
-plt.figure()
-plt.show()
-"""
-#plt.figure(figsize = (12,8))
 plt.plot(epochs, acc, 'r', label='Training accuracy')
 plt.plot(epochs, val_acc, 'b', label='Validation accuracy')
 plt.title('ACCURANCY')
 plt.legend(loc=0)
-#plt.figure()
 plt.show()
