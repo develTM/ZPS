@@ -14,9 +14,9 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 # read single image and plot 16 transformations with matplotlib.pyplot
 def plot_16():
-    image = plt.imread('E:\ZPS\scanner\cards\colors\clubs.png')
+    image = plt.imread('cards/talia_A/2 pik.png')
     images = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
-    data_generator = ImageDataGenerator(rotation_range=180, brightness_range=(0.5, 1.5), shear_range=15.0, zoom_range=[1, 2])
+    data_generator = ImageDataGenerator(rotation_range=180, brightness_range=(0.5, 1.5), shear_range=15.0, zoom_range=[1, 1.5])
     data_generator.fit(images)
     image_iterator = data_generator.flow(images)
     plt.figure(figsize=(16,16))
@@ -34,15 +34,16 @@ def plot_16():
 def gen_data(device_name = '/CPU:0'):
     with tf.device(device_name):
         data = []
-        for label, img in tqdm(enumerate(os.listdir('cards/colors/'))):
+        for iterator, img in tqdm(enumerate(os.listdir('cards/talia_A/'))):
+            label = iterator % 4
             print(label, img)
-            img = cv2.imread('cards/colors/' + img, cv2.IMREAD_GRAYSCALE)
+            img = cv2.imread('cards/talia_A/' + img, cv2.IMREAD_GRAYSCALE)
             img = cv2.resize(img, (image_width, image_height))
             imgs = img.reshape((1, img.shape[0], img.shape[1], 1))
-            data_generator = ImageDataGenerator(rotation_range=180, brightness_range=(0.5, 1.5), shear_range=15.0, zoom_range=[1, 2])
+            data_generator = ImageDataGenerator(rotation_range=180, brightness_range=(0.5, 1.5), shear_range=15.0, zoom_range=[1, 1.5])
             data_generator.fit(imgs)
             image_iterator = data_generator.flow(imgs)
-            for x in range(10000):
+            for x in range(1000):
                 img_transformed = image_iterator.next()[0].astype('int')/color_scale
                 #np.save('P:\card cv\data_' + str(x) + '.npy', [img_transformed, label])
                 data.append([img_transformed, label])
@@ -52,7 +53,7 @@ def gen_data(device_name = '/CPU:0'):
 
 
 time_start_time = time.time()
-#plot_16()
-gen_data('/GPU:0')
+plot_16()
+#gen_data('/GPU:0')
 first_time = time.time() - time_start_time
 print(first_time * 1000, 'ms')
