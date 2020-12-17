@@ -1,4 +1,4 @@
-from configuration import color_dataset_path, color_model_path, image_width, image_height, color_scale
+from configuration import color_dataset_path, value_model_path, image_width, image_height, color_scale
 
 import os
 import cv2
@@ -12,7 +12,7 @@ physical_devices = tf.config.experimental.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 data = np.load(color_dataset_path, allow_pickle=True)
-middle = 1
+middle = 12*3000
 train = data[:middle]
 test = data[middle:]
 train_X = []
@@ -35,20 +35,22 @@ tf.keras.backend.clear_session()
 np.random.seed(7)
 tf.random.set_seed(7)
 
-epochs=40
+epochs=100
 batch_size=32
 
 model = tf.keras.models.Sequential([
         tf.keras.layers.Conv2D(filters=8,kernel_size=(2, 2), activation='relu', input_shape=(train_X.shape[1], train_X.shape[2], train_X.shape[3])),
-        #tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=1),
+        tf.keras.layers.MaxPooling2D(pool_size=(2, 2), strides=1),
         tf.keras.layers.Conv2D(filters=16, kernel_size=(3,3), activation='relu'),
-        #tf.keras.layers.MaxPooling2D(pool_size=(2,2)),
+        tf.keras.layers.MaxPooling2D(pool_size=(2,2), strides = 1),
         tf.keras.layers.Conv2D(filters=8, kernel_size=(3,3), activation='relu'),
-        #tf.keras.layers.MaxPooling2D(pool_size=(2,2)),
+        tf.keras.layers.MaxPooling2D(pool_size=(2,2), strides = 1),
         tf.keras.layers.Conv2D(filters=8, kernel_size=(4,4), activation='softmax'),
-        #tf.keras.layers.MaxPooling2D(pool_size=(2,2)),
+        tf.keras.layers.MaxPooling2D(pool_size=(2,2), strides=1),
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(4, activation='softmax')
+        tf.keras.layers.Dense(16),
+        tf.keras.layers.Dense(16),
+        tf.keras.layers.Dense(6, activation='softmax')
 ])
 
 model.summary()
@@ -58,7 +60,7 @@ model.compile(loss = 'sparse_categorical_crossentropy', optimizer='rmsprop', met
 with tf.device('/GPU:0'):
     history = model.fit(train_X, train_Y, epochs=epochs, batch_size=batch_size, validation_data=(test_X, test_Y),callbacks=[cp]).history
 
-model.save(color_model_path)
+model.save(value_model_path)
 
 
 

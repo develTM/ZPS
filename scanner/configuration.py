@@ -6,11 +6,12 @@ color_scale = 1
 #E:\ZPS\scanner\cards\talia A
 A_deck_path = 'cards/talia_A/'
 
-color_model_path = 'E:\ZPS\scanner\models\color_serious.h5'
+color_model_path = r'E:\ZPS\scanner\models\color_serious.h5'
+value_model_path = r'E:\ZPS\scanner\models\value.h5'
 #cards_path = 'cards\colors\'
 
-color_dataset_path = 'P:\card cv\colors_op.npy'
-general_dataset_path = 'P:\card cv\general.npy'
-values_dataset_path = 'P:\card cv\values.npy'
+color_dataset_path = r'P:\card cv\colors_op.npy'
+general_dataset_path = r'P:\card cv\general.npy'
+values_dataset_path = r'P:\card cv\values.npy'
 
 
