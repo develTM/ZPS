@@ -1,8 +1,4 @@
-from configuration import color_dataset_path, value_model_path, image_width, image_height, color_scale
-
-import os
-import cv2
-
+from configuration import values_dataset_path, value_model_path, image_width, image_height, color_scale
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
@@ -11,7 +7,7 @@ import tensorflow as tf
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
-data = np.load(color_dataset_path, allow_pickle=True)
+data = np.load(values_dataset_path, allow_pickle=True)
 middle = 12*3000
 train = data[:middle]
 test = data[middle:]
@@ -35,8 +31,8 @@ tf.keras.backend.clear_session()
 np.random.seed(7)
 tf.random.set_seed(7)
 
-epochs=100
-batch_size=32
+epochs=20
+batch_size=64
 
 model = tf.keras.models.Sequential([
         tf.keras.layers.Conv2D(filters=8,kernel_size=(2, 2), activation='relu', input_shape=(train_X.shape[1], train_X.shape[2], train_X.shape[3])),

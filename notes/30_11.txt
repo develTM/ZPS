@@ -1,7 +1,0 @@
-L:	montaż układu, przesył obrazu do komputera
-
-T:	rozwijanie sieci neuronowej, wyszukiwanie kart w obrazie
-
-A:	potrzebuje donate na serwer, przejść z XAMPP na SQL?
-
-S:	...

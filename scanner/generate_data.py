@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
-
-from configuration import color_dataset_path,values_dataset_path, image_height, image_width, color_scale
+from configuration import color_dataset_path, values_dataset_path, image_height, image_width, color_scale
 import time
 import os
 import cv2
@@ -31,11 +30,11 @@ def plot_16():
 
 
 
-def gen_data(device_name = '/CPU:0'):
+def gen_data(device_name, path):
     with tf.device(device_name):
         data = []
         for iterator, img in tqdm(enumerate(os.listdir('cards/talia_A/'))):
-            label = int(iterator/4)
+            label = iterator % 4
             print(label, img)
             img = cv2.imread('cards/talia_A/' + img, cv2.IMREAD_GRAYSCALE)
             img = cv2.resize(img, (image_width, image_height))
@@ -48,12 +47,12 @@ def gen_data(device_name = '/CPU:0'):
                 #np.save('P:\card cv\data_' + str(x) + '.npy', [img_transformed, label])
                 data.append([img_transformed, label])
         shuffle(data)
-        np.save(values_dataset_path, data)
+        np.save(path, data)
 
 
 
 time_start_time = time.time()
 #plot_16()
-gen_data('/GPU:0')
+gen_data('/CPU:0', color_dataset_path)
 first_time = time.time() - time_start_time
 print(first_time * 1000, 'ms')
