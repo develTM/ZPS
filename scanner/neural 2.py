@@ -8,7 +8,7 @@ physical_devices = tf.config.experimental.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 data = np.load(values_dataset_path, allow_pickle=True)
-middle = 12*3000
+middle = 56000
 train = data[:middle]
 test = data[middle:]
 train_X = []
@@ -46,7 +46,7 @@ model = tf.keras.models.Sequential([
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(16),
         tf.keras.layers.Dense(16),
-        tf.keras.layers.Dense(6, activation='softmax')
+        tf.keras.layers.Dense(7, activation='softmax')
 ])
 
 model.summary()

@@ -20,3 +20,38 @@ def plot_16():
         print(i)
     plt.show()
 #plot_16()
+
+
+    # overcomplicated guessing multiple transformations
+    """
+    prediction = []
+    for i in range(10):
+        img_transformed = image_iterator.next()[0].astype('int') / color_scale
+        prediction.append(model.predict(np.array([img_transformed])))
+    data = []
+    local_max_probability = 0
+    max_probability_list = []
+    for element in prediction:
+        element_list = element[0].tolist()
+        data.append(element_list.index(max(element_list)))
+        if max(element_list) > local_max_probability:
+            local_max_probability = max(element_list)
+        max_probability_list.append(local_max_probability ** 6)
+        local_max_probability = 0
+
+    max_element = data[0]
+    if len(set(data)) > 1:
+        weighted_elements = []
+        i = 0
+        for candidate in sorted(set(data)):
+            weighted_elements.append(0)
+            j = 0
+            for element in data:
+                if candidate == element:
+                    weighted_elements[i] += max_probability_list[j]
+                j += 1
+            i += 1
+        max_element = sorted(set(data))[weighted_elements.index(max(weighted_elements))]
+
+    return max_element
+"""

@@ -3,7 +3,9 @@ image_height = 50
 image_width = 50
 color_scale = 1
 
-A_deck_path = r'cards/talia_A/'
+A_deck_path = r'P:\card cv\talia A'
+B_deck_path = r'P:\card cv\talia B'
+
 
 color_model_path = r'E:\ZPS\scanner\models\color_serious.h5'
 value_model_path = r'E:\ZPS\scanner\models\value.h5'

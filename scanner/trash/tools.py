@@ -13,3 +13,6 @@ class Clock():
             if message is not None:
                 print(message)
         self.__i += 1
+
+# most occuring element in list
+most_occuring = max(set(data), key = data.count)

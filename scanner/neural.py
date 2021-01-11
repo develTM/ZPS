@@ -9,7 +9,7 @@ physical_devices = tf.config.experimental.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 data = np.load(color_dataset_path, allow_pickle=True)
-middle = 12*3000
+middle = 48000
 train = data[:middle]
 test = data[middle:]
 train_X = []
